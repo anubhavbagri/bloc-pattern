@@ -35,6 +35,11 @@ class CounterBloc {
       counterSink.add(counter!);
     });
   }
+
+  void dispose() {
+    _stateStreamController.close();
+    _eventStreamController.close();
+  }
 }
 
 // class CounterBloc {
