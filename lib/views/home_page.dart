@@ -37,11 +37,19 @@ class _MyHomePageState extends State<MyHomePage> {
               stream: counterBloc.counterStream,
               initialData: 0,
               builder: (context, snapshot) {
-                //Text has a binding with the output of the Stream controller
-                return Text(
-                  '${snapshot.data}',
-                  style: Theme.of(context).textTheme.headline4,
-                );
+                if (snapshot.hasData) {
+                  //Text has a binding with the output of the Stream controller
+                  return Text(
+                    '${snapshot.data}',
+                    style: Theme.of(context).textTheme.headline4,
+                  );
+                } else {
+                  return Text('');
+                }
+                // if(snapshot.hasError){
+                //   print(snapshot.error);
+                // }
+                //  if(snapshot.connectionState == ConnectionState.active)
               },
             ),
           ],
