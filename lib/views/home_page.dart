@@ -1,91 +1,26 @@
-import 'package:bloc_pattern/controllers/counter_bloc.dart';
 import 'package:flutter/material.dart';
 
-class MyHomePage extends StatefulWidget {
-  MyHomePage({Key? key, required this.title}) : super(key: key);
-
-  final String title;
+class HomePage extends StatefulWidget {
+  const HomePage({Key? key}) : super(key: key);
 
   @override
-  _MyHomePageState createState() => _MyHomePageState();
+  _HomePageState createState() => _HomePageState();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
-  final counterBloc = CounterBloc();
-
-  @override
-  void dispose() {
-    counterBloc.dispose();
-    super.dispose();
-  }
-
+class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
-    print("-------Widget Tree-------");
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.title),
+        title: Text('News App'),
       ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Text(
-              'You have pushed the button this many times:',
-            ),
-            StreamBuilder<Object>(
-              stream: counterBloc.counterStream,
-              initialData: 0,
-              builder: (context, snapshot) {
-                if (snapshot.hasData) {
-                  //Text has a binding with the output of the Stream controller
-                  return Text(
-                    '${snapshot.data}',
-                    style: Theme.of(context).textTheme.headline4,
-                  );
-                } else {
-                  return Text('');
-                }
-                // if(snapshot.hasError){
-                //   print(snapshot.error);
-                // }
-                //  if(snapshot.connectionState == ConnectionState.active)
-              },
-            ),
-          ],
-        ),
-      ),
-      floatingActionButton: Row(
-        mainAxisAlignment: MainAxisAlignment.end,
-        children: [
-          FloatingActionButton(
-            onPressed: () {
-              counterBloc.eventSink.add(CounterAction.Increment);
-            },
-            tooltip: 'Increment',
-            child: Icon(Icons.add),
-          ),
-          SizedBox(
-            width: 10,
-          ),
-          FloatingActionButton(
-            onPressed: () {
-              counterBloc.eventSink.add(CounterAction.Decrement);
-            },
-            tooltip: 'Decrement',
-            child: Icon(Icons.remove),
-          ),
-          SizedBox(
-            width: 10,
-          ),
-          FloatingActionButton(
-            onPressed: () {
-              counterBloc.eventSink.add(CounterAction.Reset);
-            },
-            tooltip: 'Reset',
-            child: Icon(Icons.refresh),
-          ),
-        ],
+      body: Container(
+        child: ListView.builder(itemBuilder: (context, index) {
+          return Container(
+            height: 100,
+            color: Colors.red,
+          );
+        }),
       ),
     );
   }
