@@ -11,7 +11,7 @@ class CounterBloc {
   final _stateStreamController = StreamController<int>();
 
   // final _stateStreamController = StreamController<int>.broadcast();
-  StreamSink<int> get counterSink =>
+  StreamSink<int> get _counterSink =>
       _stateStreamController.sink; //input property
   Stream<int> get counterStream =>
       _stateStreamController.stream; //output property
@@ -20,7 +20,7 @@ class CounterBloc {
 
   StreamSink<CounterAction> get eventSink =>
       _eventStreamController.sink; //input property
-  Stream<CounterAction> get eventStream =>
+  Stream<CounterAction> get _eventStream =>
       _eventStreamController.stream; //output property
 
   CounterBloc() {
@@ -28,7 +28,7 @@ class CounterBloc {
 
     // counterStream.listen((event) {});
 
-    eventStream.listen((event) {
+    _eventStream.listen((event) {
       if (event == CounterAction.Increment)
         counter = counter! + 1;
       else if (event == CounterAction.Decrement)
@@ -36,7 +36,7 @@ class CounterBloc {
       else
         counter = 0;
 
-      counterSink.add(counter!);
+      _counterSink.add(counter!);
     });
   }
 
