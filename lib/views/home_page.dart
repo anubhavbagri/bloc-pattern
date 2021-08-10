@@ -1,5 +1,5 @@
+import 'package:bloc_pattern/controllers/news_bloc.dart';
 import 'package:bloc_pattern/models/news_info.dart';
-import 'package:bloc_pattern/services/api_manager.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
@@ -11,12 +11,18 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  Future<Welcome>? _newsModel;
+  final newsBloc = NewsBloc();
 
   @override
   void initState() {
-    _newsModel = APIManager().getNews();
+    newsBloc.eventSink.add(NewsAction.Fetch);
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    newsBloc.dispose();
+    super.dispose();
   }
 
   @override
@@ -26,14 +32,16 @@ class _HomePageState extends State<HomePage> {
         title: Text('News App'),
       ),
       body: Container(
-        child: FutureBuilder<Welcome>(
-          future: _newsModel,
+        child: StreamBuilder<List<Article>>(
+          stream: newsBloc.newsStream,
           builder: (context, snapshot) {
-            if (snapshot.hasData) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return Center(child: CircularProgressIndicator());
+            } else if (snapshot.hasData) {
               return ListView.builder(
-                  itemCount: snapshot.data!.articles.length,
+                  itemCount: snapshot.data!.length,
                   itemBuilder: (context, index) {
-                    var article = snapshot.data!.articles[index];
+                    var article = snapshot.data![index];
                     var formattedTime = DateFormat('dd MMM - HH:mm')
                         .format(article.publishedAt);
                     return Column(
@@ -92,7 +100,9 @@ class _HomePageState extends State<HomePage> {
                     );
                   });
             } else {
-              return Center(child: CircularProgressIndicator());
+              return Center(
+                  child: Text(
+                      'Something went wrong ${snapshot.error.toString()}'));
             }
           },
         ),
